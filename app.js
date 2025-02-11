@@ -15,13 +15,16 @@ const users = require("./routes/users");
 const folders = require("./routes/folders");
 
 const env = require("./env");
-const connection = mongoose.connect(env.dbLink)
-.then(() => {
-    console.log("Database connection openned")
-})
-.catch(() => {
-    console.log("Failed to open  database connection")
-});
+
+mongoose
+    .connect(env.dbLink)
+    .then(() => {
+        console.log("Database connection openned");
+    })
+    .catch((err) => {
+        console.log("Failed to open  database connection");
+        console.log(err);
+    });
 
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'hjs');
