@@ -17,10 +17,10 @@ const folders = require("./routes/folders");
 const env = require("./env");
 const connection = mongoose.connect(env.dbLink)
 .then(() => {
-    () => console.log("Database connection openned")
+    console.log("Database connection openned")
 })
 .catch(() => {
-    () => console.log("Failed to open  database connection")
+    console.log("Failed to open  database connection")
 });
 
 app.set('views', path.join(__dirname, 'views'));
@@ -43,10 +43,6 @@ app.use((req, res, next) => {
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content, Accept, Content-Type, Authorization');
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS');
-    
-    res.locals = {
-        connection: connection
-    };
 
     next();
 });
