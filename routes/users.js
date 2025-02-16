@@ -34,7 +34,7 @@ router.use("/", (req, res, next) => {
 });
 
 router.use("/", (req, res, next) => {
-    const {token} = req.body || {};
+    const token = req.headers['authorization'] || req.headers['Authorization'];
     
     if (token != undefined && !res.locals.isAdmin) {
         jwt.verify(token, env.tokenScret, (err, decoded) => {
