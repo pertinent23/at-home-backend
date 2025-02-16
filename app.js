@@ -46,7 +46,8 @@ app.use(logger("dev"))
 app.use(cors({
     origin: '*', // Autoriser les requêtes de cette origine
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
-    allowedHeaders: '*'
+    allowedHeaders: '*',
+    allowCredentials: true
 }));
 
 global.use('/users', users);
