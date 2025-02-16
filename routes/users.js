@@ -7,6 +7,24 @@ const FolderModel = require("../models/folder-model");
 
 const router = express.Router();
 
+router.post("/is-valid-token", (req, res, next) => {
+    const {token} = req.body;
+    
+    jwt.verify(token, env.tokenScret, (err, decoded) => {
+        if (err != undefined) {
+            res.status(403).json({
+                error: "Token not valid"
+            });
+        } else {
+            res.status(200).json({
+                message: "Token is valid",
+                username: decoded.data.username,
+                isAdmin: (decoded.data.username == env.adminData.username)
+            });
+        }
+    });
+});
+
 router.use("/", (req, res, next) => {
     const {username, password} = req.cookies || {};
     
@@ -15,45 +33,64 @@ router.use("/", (req, res, next) => {
     next();
 });
 
-router.post("/login", (req, res) => {
-    switch (res.locals.isAdmin) {
-        case false: 
-            UserModel
-                .find(req.body)
-                .then(users => {
-                    switch(users.length) {
-                        case 0:
-                            res.status(403).json({
-                                error: "Username or password not found"
-                            });
-                            break;
+router.use("/", (req, res, next) => {
+    const {token} = req.body || {};
+    
+    if (token != undefined && !res.locals.isAdmin) {
+        jwt.verify(token, env.tokenScret, (err, decoded) => {
+            if (!err) {
+                res.locals.isAdmin = (decoded.data.username == env.adminData.username);
+            }
+        });
+    }
 
-                        default:
-                            res.status(202).json({
-                                token: jwt.sign({
-                                    data: {
-                                        username: users[0].username,
-                                        id: users[0]._id
-                                    },
-                                    exp: Math.floor(Date.now() / 1000) + (60 * 60)
-                                }, env.tokenScret)
-                            });
-                            break;
-                    }
-                })
-                .catch(err => {
+    next();
+});
+
+router.post("/login", (req, res) => {
+    UserModel
+        .find(req.body)
+        .then(users => {
+            switch(users.length) {
+                case 0:
+                    throw new Error("User not found");
+                default:
+                    res.status(202).json({
+                        token: jwt.sign({
+                            data: {
+                                username: users[0].username,
+                                id: users[0]._id
+                            },
+                            exp: Math.floor(Date.now() / 1000) + (60 * 60)
+                        }, env.tokenScret)
+                    });
+                    break;
+            }
+        })
+        .catch(err => {
+            const {username, password} = req.body || {};
+    
+            switch (username == env.adminData.username && password == env.adminData.password) {
+                case true:
+                    res.status(202).json({
+                        message: "Access allowed",
+                        token: jwt.sign({
+                            data: {
+                                username: env.adminData.username,
+                                id: env.adminData.username
+                            },
+                            exp: Math.floor(Date.now() / 1000) + (60 * 60)
+                        }, env.tokenScret)
+                    });
+                    break;
+
+                case false:
                     res.status(403).json({
                         error: "Access Not allowed"
                     });
-                });
-            break;
-        
-        case true:
-            res.status(200).json({
-                message: "Access allowed"
-            });
-            break;
-    }
+                    break;
+            }
+        });
 });
 
 router.use("/", (req, res, next) => {
@@ -131,6 +168,9 @@ router.post("/create", (req, res) => {
 
 router.get("/get/:id", (req, res) => {
     UserModel.findById(req.params.id).then(user => {
+        if (!user) {
+            throw new Error("User not found");
+        }
         res.status(200).json(user);
     }).catch(err => {
         res.status(404).json({
