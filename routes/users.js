@@ -56,6 +56,7 @@ router.post("/login", (req, res) => {
                     throw new Error("User not found");
                 default:
                     res.status(202).json({
+                        isAdmin: false,
                         token: jwt.sign({
                             data: {
                                 username: users[0].username,
@@ -74,6 +75,7 @@ router.post("/login", (req, res) => {
                 case true:
                     res.status(202).json({
                         message: "Access allowed",
+                        isAdmin: true,
                         token: jwt.sign({
                             data: {
                                 username: env.adminData.username,
