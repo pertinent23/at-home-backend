@@ -39,7 +39,7 @@ router.use("/", (req, res, next) => {
                             error: "Token not valid yet"
                         });
                 } else {
-                    if(decoded.data.usernme == env.adminData.username) {
+                    if(decoded.data.username == env.adminData.username) {
                         res.locals.isAdmin = true;
                     } else {
                         res.locals.user = decoded.data;
@@ -176,7 +176,7 @@ router.use("/", (req, res, next) => {
     switch (res.locals.isAdmin) {
         case false:
             res.status(403).json({
-                error: "Access Not allowed"
+                error: "Access Not allowed cause not admin"
             });
             break;
         
