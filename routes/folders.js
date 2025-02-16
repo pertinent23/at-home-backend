@@ -18,12 +18,14 @@ router.use("/", (req, res, next) => {
     const token = req.headers['authorization'] || req.headers['Authorization'];
     
     switch (token) {
+        case null:
+        case '':
         case undefined: 
             if (res.locals.isAdmin) {
                 next();
             } else {
                 res.status(403).json({
-                    error: "Access Not allowed"
+                    error: "Access Not allowed cause of token"
                 });
             }
             break;
@@ -37,7 +39,12 @@ router.use("/", (req, res, next) => {
                             error: "Token not valid yet"
                         });
                 } else {
-                    res.locals.user = decoded.data;
+                    if(decoded.data.usernme == env.adminData.username) {
+                        res.locals.isAdmin = true;
+                    } else {
+                        res.locals.user = decoded.data;
+                    }
+                    
                     next();
                 }
             });
@@ -241,6 +248,7 @@ router.get("/folder/:id", (req, res) => {
     FolderModel
         .findOne({userId: req.params.id})
         .then((folder) => {
+            if(!folder) throw new Error("folder not found");
             res.status(200).json(folder);
         })
         .catch((err) => {
