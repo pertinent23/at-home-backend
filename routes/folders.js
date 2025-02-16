@@ -15,7 +15,7 @@ router.use("/", (req, res, next) => {
 });
 
 router.use("/", (req, res, next) => {
-    const {token} = req.cookies || {};
+    const token = req.headers['authorization'] || req.headers['Authorization'];
     
     switch (token) {
         case undefined: 
