@@ -44,7 +44,7 @@ app.use(bodyParser.urlencoded({
 app.use(logger("dev"))
 
 app.use(cors({
-    origin: '*', // Autoriser les requêtes de cette origine
+    origin: 'http://localhost:4200', // Autoriser les requêtes de cette origine
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     allowedHeaders: '*',
     credentials: true
