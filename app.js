@@ -45,8 +45,8 @@ app.use(logger("dev"))
 
 app.use(cors({
     origin: 'http://localhost:4200', // Autoriser les requêtes de cette origine
-    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
-    allowedHeaders: '*',
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE'.split(','),
+    allowedHeaders: ['Content-Type', 'Authorization'],
     credentials: true
 }));
 
