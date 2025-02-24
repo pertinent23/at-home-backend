@@ -1,8 +1,22 @@
 module.exports.dbLink = "mongodb+srv://10at-home:CM3SAJp4zIBdWu0f@cluster0.zaad8.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
 
 module.exports.adminData = {
-    username: "admin",
-    password: "at-home$$232",
+    username: ["admin1", "admin2"],
+    password: ["at-home$$232", "at-000$$457"],
+    isAdmin(username, password) {
+      const index = this.username.indexOf(username);
+
+      switch(index) {
+        case -1:
+          return false;
+        
+        default: 
+          return index < this.password.length && this.password[index] === password;
+      }
+    },
+    isAnAdminUsername(username) {
+      return this.username.indexOf(username) != -1;
+    }
 };
 
 // Import the functions you need from the SDKs you need

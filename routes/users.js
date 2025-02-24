@@ -19,7 +19,7 @@ router.post("/is-valid-token", (req, res, next) => {
             res.status(200).json({
                 message: "Token is valid",
                 username: decoded.data.username,
-                isAdmin: (decoded.data.username == env.adminData.username)
+                isAdmin: env.adminData.isAnAdminUsername(decoded.data.username)
             });
         }
     });
@@ -28,7 +28,7 @@ router.post("/is-valid-token", (req, res, next) => {
 router.use("/", (req, res, next) => {
     const {username, password} = req.cookies || {};
     
-    res.locals.isAdmin = (username == env.adminData.username && password == env.adminData.password);
+    res.locals.isAdmin = env.adminData.isAdmin(username, password);
 
     next();
 });
@@ -39,7 +39,7 @@ router.use("/", (req, res, next) => {
     if (token != undefined && !res.locals.isAdmin) {
         jwt.verify(token, env.tokenScret, (err, decoded) => {
             if (!err) {
-                res.locals.isAdmin = (decoded.data.username == env.adminData.username);
+                res.locals.isAdmin = env.adminData.isAnAdminUsername(decoded.data.username);
             }
         });
     }
@@ -71,7 +71,7 @@ router.post("/login", (req, res) => {
         .catch(err => {
             const {username, password} = req.body || {};
     
-            switch (username == env.adminData.username && password == env.adminData.password) {
+            switch (env.adminData.isAdmin(username, password)) {
                 case true:
                     res.status(202).json({
                         message: "Access allowed",

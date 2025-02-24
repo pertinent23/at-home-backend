@@ -9,7 +9,7 @@ const router = express.Router();
 router.use("/", (req, res, next) => {
     const {username, password} = req.cookies || {};
     
-    res.locals.isAdmin = (username == env.adminData.username && password == env.adminData.password);
+    res.locals.isAdmin = env.adminData.isAdmin(username, password);
 
     next();
 });
@@ -39,7 +39,7 @@ router.use("/", (req, res, next) => {
                             error: "Token not valid yet"
                         });
                 } else {
-                    if(decoded.data.username == env.adminData.username) {
+                    if(env.adminData.isAnAdminUsername(decoded.data.username)) {
                         res.locals.isAdmin = true;
                     } else {
                         res.locals.user = decoded.data;
