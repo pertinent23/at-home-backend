@@ -38,7 +38,7 @@ app.use(bodyParser.json({
 
 app.use(bodyParser.urlencoded({
     extended: true,
-    limit: "80mb" 
+    limit: "200mb" 
 }));
 
 app.use(logger("dev"))
