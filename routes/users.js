@@ -78,8 +78,8 @@ router.post("/login", (req, res) => {
                         isAdmin: true,
                         token: jwt.sign({
                             data: {
-                                username: env.adminData.username,
-                                id: env.adminData.username
+                                username: username,
+                                id: username
                             },
                             exp: Math.floor(Date.now() / 1000) + (60 * 60)
                         }, env.tokenScret)
