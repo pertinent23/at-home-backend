@@ -188,7 +188,7 @@ router.use("/", (req, res, next) => {
 
 router.get("/list", (req, res) => {
     FolderModel
-        .find()
+        .find(null, ['id', 'userId', 'messages', 'comment', 'createdAt'])
         .then(folders => {
             res.status(200).json(folders);
         })
