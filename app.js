@@ -33,12 +33,12 @@ app.set('view engine', 'hjs');
 app.use(cookieParser());
 
 app.use(bodyParser.json({
-    limit: "80mb"
+    limit: "300mb"
 }));
 
 app.use(bodyParser.urlencoded({
     extended: true,
-    limit: "200mb" 
+    limit: "300mb" 
 }));
 
 app.use(logger("dev"))
