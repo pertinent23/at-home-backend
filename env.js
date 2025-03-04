@@ -1,8 +1,8 @@
 module.exports.dbLink = "mongodb+srv://10at-home:CM3SAJp4zIBdWu0f@cluster0.zaad8.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
 
 module.exports.adminData = {
-    username: ["admin1", "admin2"],
-    password: ["at-home$$232", "at-000$$457"],
+    username: ["admin1", "admin2", "admin3", "admin4", "admin5"],
+    password: ["at-home$$232", "at-000$$457", "2025$$03ad", "0025$$04ad", "2500$$05ad"],
     isAdmin(username, password) {
       const index = this.username.indexOf(username);
 
