@@ -44,7 +44,7 @@ app.use(bodyParser.urlencoded({
 app.use(logger("dev"))
 
 app.use(cors({
-    origin: ['http://localhost:4200', 'https://athome-a9287d311cf1.herokuapp.com'], // Autoriser les requêtes de cette origine
+    origin: ['http://localhost:4200', 'https://at-home-6fb8fc8e1f73.herokuapp.com'], // Autoriser les requêtes de cette origine
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE'.split(','),
     allowedHeaders: ['Content-Type', 'Authorization'],
     credentials: true
